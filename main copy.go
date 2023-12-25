@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"golang-bwa/handler"
 	"golang-bwa/user"
 	"log"
 	"net/http"
@@ -37,30 +36,22 @@ func main() {
 	fmt.Println(db)
 	fmt.Println("DB connected")
 
-	var userRepository user.Repository = user.NewRepository(db)
-	// fmt.Println(userRepository)
-	// user, err := userRepository.Save(user.User{Name: "Nikko"})
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	var userService user.Service = user.NewService(userRepository)
-
-	// user, err := userService.RegisterUser(user.RegisterUserInput{Name: "Gooo", Email: "goleng2@gmail.com", Password: "12345678"})
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// fmt.Println(user)
-
-	var userHandler = handler.NewUserHandler(userService)
-
+	gin.ForceConsoleColor()
 	router := gin.Default()
+	router.GET("/", func(ctx *gin.Context) {
+		// ctx.JSON(200, []string{"oke", "bos"})
+		ctx.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
 
-	apiV1 := router.Group("api/v1")
-	apiV1.POST("users", userHandler.RegisterUser)
+	router.GET("hello", hello)
+	router.GET("users", users)
 
-	router.Run()
+	err2 := router.Run()
+	if err2 != nil {
+		log.Fatal(err)
+	}
 }
 
 func hello(c *gin.Context) {
