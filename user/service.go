@@ -3,6 +3,7 @@ package user
 import "golang.org/x/crypto/bcrypt"
 
 type Service interface {
+	GetAll() ([]User, error)
 	RegisterUser(input RegisterUserInput) (User, error)
 }
 
@@ -12,6 +13,14 @@ type service struct {
 
 func NewService(r Repository) *service {
 	return &service{r}
+}
+
+func (s *service) GetAll() ([]User, error) {
+	users, err := s.repository.GetAll()
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
 }
 
 func (s *service) RegisterUser(input RegisterUserInput) (User, error) {
